@@ -1,12 +1,14 @@
 import './App.css'
+import Navbar from './components/Navbar.jsx'
+import Tablelist from './components/Tablelist.jsx'
 
 function App() {
 
   return (
     <>
-      <div>
-        <h1>Hello World</h1>
-      </div>
+      <Navbar />
+      <Tablelist />
+      
 
     </>
   )
