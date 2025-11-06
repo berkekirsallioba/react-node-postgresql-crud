@@ -1,4 +1,4 @@
-export default function Tablelist() {
+export default function TableList({handleOpen}) {
 
     const clients = [
         { "id": 1, "name": "Alice Johnson", "email": "alice.johnson@example.com", "job": "Software Engineer", "rate": "120.00", "isActive": true },
@@ -24,18 +24,27 @@ export default function Tablelist() {
                             <th>EMAIL</th>
                             <th>JOB</th>
                             <th>RATE</th>
-                            <th>ISACTIVE</th>
+                            <th>STATUS</th>
                         </tr>
                     </thead>
                     <tbody >
                         {clients.map((client) => (
-                            <tr className="hover:bg-base-300"  > 
+                            <tr className="hover:bg-base-300"  >
                                 <td>{client.id}</td>
                                 <td>{client.name}</td>
                                 <td>{client.email}</td>
                                 <td>{client.job}</td>
                                 <td>{client.rate}</td>
-                                <td>{client.isActive}</td>
+                                <td><button className={`btn rounded-full w-20 ${client.isActive ? 'btn-primary' : 'btn-outline btn-primary'}`}>
+                                    {client.isActive ? 'Active' : 'InActive'}
+                                </button>
+                                </td>
+                                <td>
+                                    <button onClick={() => handleOpen('edit')} className="btn btn-secondary">Update</button>
+                                </td>
+                                <td>
+                                    <button className="btn btn-accent">Delete</button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

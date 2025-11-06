@@ -1,14 +1,30 @@
+import { useState } from 'react'
 import './App.css'
-import Navbar from './components/Navbar.jsx'
-import Tablelist from './components/Tablelist.jsx'
+import ModalForm from './components/ModalForm.jsx'
+import NavBar from './components/Navbar.jsx'
+import TableList from './components/Tablelist.jsx'
 
 function App() {
 
+  const [isOpen, setIsOpen] = useState(false)
+  const [modalMode, setModalMode] = useState('add')
+  const handleOpen = (mode) => {
+    setIsOpen(true);
+    setModalMode(mode);
+  }
+
+    const handleSubmit = () => {
+    if(modalMode=== 'add'){
+      console.log('modal mode Add')
+    } else{
+      console.log('modal mode Edit')
+    }
+  }
   return (
     <>
-      <Navbar />
-      <Tablelist />
-      
+      <NavBar onOpen={() => handleOpen('add')} />
+      <TableList handleOpen={handleOpen} />
+      <ModalForm isOpen={isOpen} onSubmit={handleSubmit} onClose={() => setIsOpen(false)} mode={modalMode} />
 
     </>
   )

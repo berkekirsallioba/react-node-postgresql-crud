@@ -1,0 +1,28 @@
+{
+  "devDependencies": {
+    "daisyui": "^5.4.5"
+  },
+  "name": "react-node-postgresql-crud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/berkekirsallioba/react-node-postgresql-crud.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/berkekirsallioba/react-node-postgresql-crud/issues"
+  },
+  "homepage": "https://github.com/berkekirsallioba/react-node-postgresql-crud#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0"
+  }
+}
