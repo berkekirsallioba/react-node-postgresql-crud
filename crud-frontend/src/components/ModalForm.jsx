@@ -71,7 +71,7 @@ export default function ModalForm({ isOpen, onClose, mode, onSubmit, clientData 
                                 Rate
                                 <input type="text" className="grow" placeholder="Rate" value={rate} onChange={(e) => setRate(e.target.value)} />
                             </label>
-                            <select value={status ? 'Active' : 'Inactive'} onChange={(e) => setStatus(e.target.value === 'Active')} className="select select-bordered md:basis-1/2" onChange={handleStatusChange}>
+                            <select value={status ? 'Active' : 'Inactive'} onChange={(e) => setStatus(e.target.value === 'Active')} className="select select-bordered md:basis-1/2">
                                 <option>Inactive</option>
                                 <option>Active</option>
                             </select>
