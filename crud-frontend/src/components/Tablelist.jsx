@@ -1,20 +1,33 @@
-export default function TableList({handleOpen}) {
+import axios from 'axios';
+import { useState } from 'react';
 
-    const clients = [
-        { "id": 1, "name": "Alice Johnson", "email": "alice.johnson@example.com", "job": "Software Engineer", "rate": "120.00", "isActive": true },
+export default function TableList({ handleOpen,tableData, setTableData, searchTerm }) {
+    const [error, setError] = useState(null);
 
-        { "id": 2, "name": "Bob Smith", "email": "bob.smith@example.com", "job": "Product Manager", "rate": "150.00", "isActive": true },
+    const filteredData = tableData.filter(client =>
+        client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        client.job.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
-        { "id": 3, "name": "Charlie Davis", "email": "charlie.davis@example.com", "job": "Designer", "rate": "90.00", "isActive": true },
+    const handleDelete = async (id) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this client?");
+        if (confirmDelete) {
+            try {
+                await axios.delete(`http://localhost:3000/api/clients/${id}`);
+                setTableData((prevData) => prevData.filter((client) => client.id !== id));
+            } catch (err) {
+                setError(err.message); // Handle any errors
+            }
+        }
+    };
 
-        { "id": 4, "name": "Dana Lee", "email": "dana.lee@example.com", "job": "Data Analyst", "rate": "110.00", "isActive": false },
-
-        { "id": 5, "name": "Eve Martin", "email": "eve.martin@example.com", "job": "HR Specialist", "rate": "100.00", "isActive": true }
-    ]
 
     return (
         <>
-            <div className="overflow-x-auto">
+
+            {error && <div className="alert alert-error">{error}</div>}
+            <div className="overflow-x-auto mt-10">
                 <table className="table">
                     {/* head */}
                     <thead>
@@ -28,22 +41,22 @@ export default function TableList({handleOpen}) {
                         </tr>
                     </thead>
                     <tbody >
-                        {clients.map((client) => (
-                            <tr className="hover:bg-base-300"  >
+                        {filteredData.map((client) => (
+                            <tr key={client.id} className="hover:bg-base-300"  >
                                 <td>{client.id}</td>
                                 <td>{client.name}</td>
                                 <td>{client.email}</td>
                                 <td>{client.job}</td>
                                 <td>{client.rate}</td>
-                                <td><button className={`btn rounded-full w-20 ${client.isActive ? 'btn-primary' : 'btn-outline btn-primary'}`}>
-                                    {client.isActive ? 'Active' : 'InActive'}
+                                <td><button className={`btn rounded-full w-20 ${client.isactive ? 'btn-primary' : 'btn-outline btn-primary'}`}>
+                                    {client.isactive ? 'Active' : 'InActive'}
                                 </button>
                                 </td>
                                 <td>
-                                    <button onClick={() => handleOpen('edit')} className="btn btn-secondary">Update</button>
+                                    <button onClick={() => handleOpen('edit', client)} className="btn btn-secondary">Update</button>
                                 </td>
                                 <td>
-                                    <button className="btn btn-accent">Delete</button>
+                                    <button onClick={() => handleDelete(client.id)} className="btn btn-accent">Delete</button>
                                 </td>
                             </tr>
                         ))}

@@ -1,30 +1,77 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import ModalForm from './components/ModalForm.jsx'
 import NavBar from './components/Navbar.jsx'
-import TableList from './components/Tablelist.jsx'
+import TableList from './components/TableList.jsx'
+import axios from 'axios'
 
 function App() {
 
   const [isOpen, setIsOpen] = useState(false)
   const [modalMode, setModalMode] = useState('add')
-  const handleOpen = (mode) => {
-    setIsOpen(true);
-    setModalMode(mode);
-  }
+  const [searchTerm, setsearchTerm] = useState('');
+  const [clientData, setClientData] = useState(null);
+  const [tableData, setTableData] = useState([]);
 
-    const handleSubmit = () => {
-    if(modalMode=== 'add'){
-      console.log('modal mode Add')
-    } else{
-      console.log('modal mode Edit')
+  const fetchClients = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/clients');
+      setTableData(response.data);
+    } catch (err) {
+      setError(err.message);
     }
-  }
+  };
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
+
+  const handleOpen = (mode, client) => {
+    setClientData(client);
+    setModalMode(mode);
+    setIsOpen(true);
+  };
+
+  const handleSubmit = async (newClientData) => {
+    if (modalMode === 'add') {
+      try {
+        const response = await axios.post(
+          'http://localhost:3000/api/clients',
+          newClientData
+        );
+        console.log('Client added:', response.data);
+      } catch (error) {
+        console.error('Error adding client:', error);
+      }
+
+      console.log('modal mode Add');
+    } else {
+      console.log('Updating client with ID:', clientData.id); // Log the ID being updated
+
+      try {
+        const response = await axios.put(
+          `http://localhost:3000/api/clients/${clientData.id}`,
+          newClientData
+        );
+        console.log('Client updated:', response.data);
+        setTableData(prevData =>
+          prevData.map(client =>
+            client.id === clientData.id ? response.data : client
+          )
+        );
+      } catch (error) {
+        console.error('Error updating client:', error);
+      }
+    }
+  };
+
+
   return (
     <>
-      <NavBar onOpen={() => handleOpen('add')} />
-      <TableList handleOpen={handleOpen} />
-      <ModalForm isOpen={isOpen} onSubmit={handleSubmit} onClose={() => setIsOpen(false)} mode={modalMode} />
+      <NavBar onOpen={() => handleOpen('add')} onSearch={setsearchTerm} />
+      <TableList setTableData={setTableData} tableData={tableData} handleOpen={handleOpen} searchTerm={searchTerm} />
+      <ModalForm isOpen={isOpen} onSubmit={handleSubmit} onClose={() => setIsOpen(false)} mode={modalMode} clientData={clientData} />
 
     </>
   )
